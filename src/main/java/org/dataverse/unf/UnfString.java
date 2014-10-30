@@ -183,7 +183,7 @@ public class UnfString<T extends CharSequence> implements UnfCons {
      */
     public String RUNF5(final CharSequence[] v, boolean miss[], int digits, List<Integer> result,
             Character[] base64, StringBuilder hex)
-            throws UnsupportedEncodingException {
+            throws UnsupportedEncodingException, UnfException {
 
         int nv = v.length;
 
@@ -245,7 +245,7 @@ public class UnfString<T extends CharSequence> implements UnfCons {
      */
     public MessageDigest UNF3(CharSequence obj, int digits,
             MessageDigest previous, boolean miss)
-            throws UnsupportedEncodingException {
+            throws UnsupportedEncodingException, UnfException {
         if (!miss) {
             mLog.finer(obj.toString());
             String res = "";

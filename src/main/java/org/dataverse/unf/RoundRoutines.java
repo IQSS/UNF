@@ -169,7 +169,7 @@ public class RoundRoutines<T extends Number> implements UnfCons {
      * @param digits integer total decimal digits including decimal point
      * @return String with canonical formatting
      */
-    public String Genround(T obj, int digits) {
+    public String Genround(T obj, int digits) throws UnfException {
         return Genround(obj, digits, nullbyte);
     }
 
@@ -180,81 +180,122 @@ public class RoundRoutines<T extends Number> implements UnfCons {
      * @param numberValue Object of class *Number and sub-classes*
      * (why not declare it as such - Number numberValue? -- L.A.)
      * @param digits integer Number of decimal digits with decimal point
-     * @param no boolean indicating whether null byte ('\0') is appended
+     * @param nullByte boolean indicating whether null byte ('\0') is appended
      * @return String with the numeric value represented using IEEE 754
      */
-    public String Genround(T numberValue, int digits, boolean no) {
-        RoundRoutines.nullbyte = no;
-
-        BigDecimal bigDecimalValue = null;
+    public String Genround(T numberValue, int digits, boolean nullByte) throws UnfException {
+        RoundRoutines.nullbyte = nullByte;
         
-        if (numberValue instanceof BigInteger) {
-            bigDecimalValue = new BigDecimal((BigInteger) numberValue, MathContext.DECIMAL64);
+        if (numberValue == null) {
+            throw new UnfException ("Missing (Null) value passed to Genround(Number)!");
         }
 
-        StringBuilder build = new StringBuilder();
-        String fmt, fmtu, tmp;
-        //the decimal separator symbol locally
+        //the decimal separator symbol:
         char sep = symb.getDecimalSep();
 
+         if (sep != dot) {
+            mLog.warning("RoundRoutines: Decimal separator is not " +
+                    "'\u002E' or a dot:.");
+            sep = '.';
+            // TODO: ?
+        }
+         
         if (digits < 0) {
             digits = this.digits;
         }
 
         Double doubleValue = numberValue.doubleValue();
 
-        /*
-         * new BigDecimal(x.toString()) will throw an exception, if x is a special 
-         * floating point value - Double.NaN, Inf or -Inf. -- L.A. 
-         */
-        try {
-            bigDecimalValue = new BigDecimal(Double.toString(numberValue.doubleValue()) ,MathContext.DECIMAL64);
-        } catch (NumberFormatException ex) {
-            mLog.fine("Caught an exception when trying to make a BigDecimal out of a .doubleValue() of a Number object; (most likely because it's a special value - ignoring)");
-        }
-        if (sep != dot) {
-            mLog.warning("RoundRoutines: Decimal separator is not " +
-                    "'\u002E' or a dot:.");
-            sep = '.';
-        }
+        // Special handling for Zero, positive and negative:
+        
+        if (doubleValue.doubleValue() == 0.0d) {
+            // For Java's primitive type double the above 
+            // expression (... == 0.0d) evaluates to TRUE for both the positive 
+            // and negative zero!
+            
+            StringBuffer nullStringBuffer = new StringBuffer(); 
 
-        // Now check for the Infinity(-ies) or NaN for Floating Point values:
-
-        if (!(numberValue instanceof BigDecimal) && (bigDecimalValue == null) &&
-                (tmp = RoundRoutinesUtils.specialNumb(doubleValue)) != null) {
-            StringBuffer specialValue = new StringBuffer();
+            // However, the .equals() method supplied by the class 
+            // Double does differentiate between the two:
+            if (doubleValue.equals(new Double(0.0d))) {
+                nullStringBuffer.append(plus);
+            } else if (doubleValue.equals(new Double(-0.0d))) {
+                nullStringBuffer.append(min);
+            } else {
+                throw new UnfException("The zero value supplied is neither positive, nor negative... what?");
+            }
+            nullStringBuffer.append(zero);
+            nullStringBuffer.append(sep);
+            nullStringBuffer.append(e);
+            nullStringBuffer.append(plus);
+            nullStringBuffer.append(creturn);
+            return nullStringBuffer.toString();
+        }
+        
+        
+        // Special handling for the special floating point values, 
+        // Double.NaN, Inf or -Inf:
+        
+        String specialValueToken = null; 
+        
+        if ((specialValueToken = RoundRoutinesUtils.specialNumb(doubleValue)) != null) {
+            StringBuffer specialValueBuffer = new StringBuffer();
             /*
              * Important: 
              * Just like regular numeric values, and unlike missing values, 
              * string representations of special values must be terminated with 
              * new lines. -- L.A.  
              */
-            specialValue.append(tmp);
-            specialValue.append(creturn);
-            // TODO:
-            // double-check if null byte isn't needed here, in some cases!
-            // -- L.A. Aug. 17 2014
-            
-            return specialValue.toString();
+            specialValueBuffer.append(specialValueToken);
+            specialValueBuffer.append(creturn);
+           
+            return specialValueBuffer.toString();
         } 
-        // TODO: throw an exception if it's neither a BigDecimal, nor a special 
-        // Floating Point value? -- L.A.
+        
+        BigDecimal bigDecimalValue = null;
+        
+        if (numberValue instanceof BigDecimal) {
+            bigDecimalValue = (BigDecimal) numberValue;
+        } else if (numberValue instanceof BigInteger) {
+            bigDecimalValue = new BigDecimal((BigInteger) numberValue, MathContext.DECIMAL64);
+        } else {
+            try {
+                bigDecimalValue = new BigDecimal(Double.toString(numberValue.doubleValue()), MathContext.DECIMAL64);
+            } catch (NumberFormatException ex) {
+                //mLog.fine("Caught an exception when trying to make a BigDecimal out of a .doubleValue() of a Number object; (most likely because it's a special value - ignoring)");
+                throw new UnfException("Caught an exception when trying to make a BigDecimal out of a .doubleValue() of a Number object; (an undetected special IEEE value perhaps?)");
+            }
+        }
+        
+        if (bigDecimalValue == null) {
+            throw new UnfException("Failed to convert the supplied Number value "+numberValue+" to BigDecimal.");
+        }
+
+        String fmt, fmtu;
+
 
         char[] str = {percntg, plus, pndsgn, sep}; //{'%','+', '#', '.'}
 
         int dgt = (INACCURATE_SPRINTF) ? INACCURATE_SPRINTF_DIGITS : (digits - 1);
 
         fmt = new String("%+#." + dgt + "e");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        
         //using the Unicode character symbols
-        build.append(str);
-        build.append(dgt);
-        build.append(e);
-        fmtu = build.toString();
-        build = null;
+        stringBuilder.append(str);
+        stringBuilder.append(dgt);
+        stringBuilder.append(e);
+        fmtu = stringBuilder.toString();
+        stringBuilder = null;
         
         if (!fmtu.equalsIgnoreCase(fmt) && loc == new Locale("en", "US")) {
             mLog.severe("RoundRoutines: Unicode & format strings do not agree");
+            // TODO:
             // throw an exception here - ?
+            // what is this check for anyway? - could we just connclude that 
+            // it's irrelevant, now that we are using UTF8?
+            // -- L.A. Oct. 2014
         }
 
         // TODO: 
@@ -266,28 +307,23 @@ public class RoundRoutines<T extends Number> implements UnfCons {
         // the correct MathContext, which already specifies the rounding 
         // algorithm that needs to be used?)
         // -- L.A. Aug. 2014
+        // OK, ot rid of the different cases that were defined for handling
+        // BigDecimals and doubleValues differently... -- L.A. Oct. 2014
         // TODO: 
         // Document why we need RoundingMode.HALF_EVEN below, and not just 
         // the default String representation of the value, below. 
         // -- L.A. Aug. 2014
         
-        if (numberValue instanceof BigDecimal) {
-            tmp = String.format(loc, fmtu, numberValue);
-            System.out.print("instance of BigDecimal; "+tmp);
-        } else if (bigDecimalValue != null) {
-            tmp = String.format(loc, fmtu, bigDecimalValue.round(new MathContext(digits, RoundingMode.HALF_EVEN))); 
-        } else {
-            tmp = String.format(loc, fmtu, doubleValue);//double representation with full precision
-        }
+        
+        String tmp = String.format(loc, fmtu, bigDecimalValue.round(new MathContext(digits, RoundingMode.HALF_EVEN))); 
         
         String atoms[] = tmp.split(e + "");
-        //e.g., Number -2.123498e+22; atoms[0]=-2.123498 & atoms[1]=+22
 
-        build = calcMantissa(atoms[0], sep);
-        build.append(e);
-        build.append(atoms[1].charAt(0)); //sign of exponent
-        build.append(calcExponent(atoms[1]));
-        return build.toString();
+        stringBuilder = calcMantissa(atoms[0], sep);
+        stringBuilder.append(e);
+        stringBuilder.append(atoms[1].charAt(0)); //sign of exponent
+        stringBuilder.append(calcExponent(atoms[1]));
+        return stringBuilder.toString();
     }
 
     /**
@@ -297,7 +333,7 @@ public class RoundRoutines<T extends Number> implements UnfCons {
      * @param charset String with optional encoding of bytes
      * @return byte array encoded with charset
      */
-    public byte[] GenroundBytes(T obj, int digits, String... charset) {
+    public byte[] GenroundBytes(T obj, int digits, String... charset) throws UnfException {
         String str = Genround(obj, digits);
         if (str == null || str.equals("")) {
             return null;
@@ -382,7 +418,7 @@ public class RoundRoutines<T extends Number> implements UnfCons {
      * @param digits integer with number of characters  to keep
      * @return String formatted
      */
-    public String Genround(CharSequence cobj, int digits) {
+    public String Genround(CharSequence cobj, int digits) throws UnfException {
         return Genround(cobj, digits, nullbyte);
     }
 
@@ -392,12 +428,13 @@ public class RoundRoutines<T extends Number> implements UnfCons {
      * @param no boolean if to append nullbyte
      * @return String formatted
      */
-    public static String Genround(CharSequence cobj, int digits, boolean no) {
+    public static String Genround(CharSequence cobj, int digits, boolean no) throws UnfException {
         
         // A special case for a character string made up entirely of 
         // "blank space" characters - i.e., spaces, tabs and assorted newlines:
         if ((((String) cobj).trim()).equals("")) {
-            // (or an empty string, for that matter...)
+            // (or an empty string, for that matter... - except this method
+            // is NOT called on empty strings.)
             // Current approach - if this "all-blank" is not longer than
             // the cutoff limit ("digits" characters long), it is normalized
             // to an empty string. If it is longer than digits, it is normalized

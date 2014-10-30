@@ -202,7 +202,7 @@ public class UnfNumber<T extends Number> implements UnfCons {
     }
 
     public String RUNF5(final T[] v, int digits, List<Integer> result, Character[] base64, StringBuilder hex)//, String[] resultBase64)
-            throws UnsupportedEncodingException,  IOException {
+            throws UnsupportedEncodingException, UnfException, IOException {
         int nv = v.length;
         double dub = 0;
         boolean miss = false;
@@ -265,7 +265,7 @@ public class UnfNumber<T extends Number> implements UnfCons {
      * @throws UnsupportedEncodingException
      */
     public MessageDigest UNF5(final T obj, int digits, MessageDigest previous, boolean miss)
-            throws UnsupportedEncodingException,  IOException {
+            throws UnsupportedEncodingException, UnfException, IOException {
         if (!miss) {
             RoundRoutines<T> rout = new RoundRoutines<T>(digits, false, currentlocale);
 

@@ -60,7 +60,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final double[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
 
         Double mat[][] = new Double[1][numb.length];
         for (int n = 0; n < numb.length; ++n) {
@@ -81,7 +81,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final float[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         double[] toret = new double[numb.length];
         for (int k = 0; k < numb.length; ++k) {
              toret[k] =  numb[k] == Float.NaN ? Double.NaN : (double) numb[k];
@@ -98,7 +98,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final short[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         double[] toret = new double[numb.length];
         for (int k = 0; k < numb.length; ++k) {
            if (numb[k] == Short.MAX_VALUE){
@@ -120,7 +120,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final byte[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         double[] toret = new double[numb.length];
         for (int k = 0; k < numb.length; ++k) {
            if (numb[k] == Byte.MAX_VALUE){
@@ -142,7 +142,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final long[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
 
         double[] toret = new double[numb.length];
         for (int k = 0; k < numb.length; ++k) {
@@ -164,7 +164,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final int[] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
 
         double[] toret = new double[numb.length];
         for (int k = 0; k < numb.length; ++k) {
@@ -204,7 +204,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static <T> String calculateUNF(final List<T> numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         if (numb.get(0) instanceof Number) {
             double[] arr = new double[numb.size()];
             int cnt = 0;
@@ -228,7 +228,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final String[] chr)
-            throws IOException {
+            throws IOException, UnfException {
         String tosplit = ":";
         if (chr[0] != null) {
             String spres[] = chr[0].split(tosplit);
@@ -251,7 +251,7 @@ public class UNF5Util {
     }
 
      public static String calculateUNF(final String[] chr, final String[] sdfFormat)
-            throws  IOException {
+            throws  IOException, UnfException {
         String tosplit = ":";
          if (chr[0] != null) {
              String spres[] = chr[0].split(tosplit);
@@ -299,7 +299,7 @@ public class UNF5Util {
     }
 
       public static String calculateUNF(final String[] beginDate, final String[] sdfFormat, final String[] endDate)
-            throws  IOException {
+            throws  IOException, UnfException {
         String tosplit = ":";
          if (beginDate[0] != null) {
              String spres[] = beginDate[0].split(tosplit);
@@ -375,7 +375,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final double[][] numb)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         int ncol = numb[0].length;
         List<double[]> lst = Arrays.asList(numb);
         int nrw = lst.size();
@@ -403,7 +403,7 @@ public class UNF5Util {
      * @throws IOException
      */
     public static String calculateUNF(final String[][] str)
-            throws NumberFormatException, IOException {
+            throws NumberFormatException, UnfException, IOException {
         int ncol = str[0].length;
         List<String[]> lst = Arrays.asList(str);
         int nrw = lst.size();
@@ -417,7 +417,7 @@ public class UNF5Util {
         return calculateUNF(unfs);
     }
 
-    public static String calculateUNF(final Number[] numb) throws IOException {
+    public static String calculateUNF(final Number[] numb) throws IOException, UnfException {
         Double mat[][] = new Double[1][numb.length];
         for (int n = 0; n < numb.length; ++n) {
             mat[0][n] = numb[n] != null ? Double.valueOf(numb[n].doubleValue()) : null;

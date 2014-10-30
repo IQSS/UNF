@@ -202,7 +202,7 @@ public class Unf5Digest implements UnfCons {
      * @throws IOException
      */
      public static <T extends Number> String[] unf(final T[][] obj, Integer... digits) throws
-            UnsupportedEncodingException, IOException {
+            UnsupportedEncodingException, UnfException, IOException {
         if (obj == null) {
             return null;
         }
@@ -279,6 +279,7 @@ public class Unf5Digest implements UnfCons {
      */
     public static <T extends CharSequence> String[] unf(final T[][] obj, Integer... digits) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException {
         return unf(obj, currentVersion, digits);
 
@@ -298,6 +299,7 @@ public class Unf5Digest implements UnfCons {
     public static <T extends CharSequence> String[] unf(final T[][] obj, String vers,
             Integer... digits) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException {
         if (obj == null) {
             return null;
@@ -349,6 +351,7 @@ public class Unf5Digest implements UnfCons {
      */
     public static <T extends Number> String unfV(final T[] obj, int ndg) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException {
         int hsz = 128;
         signature = new Unf5Class(DEF_CDGTS, ndg, hsz);
@@ -369,6 +372,7 @@ public class Unf5Digest implements UnfCons {
     public static <T extends Number> String unfV(final T[] obj,
             int ndg, Unf5Class signature) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException {
         UnfNumber<T> unfno = new UnfNumber<T>();
         Character[] base64 = new Character[64];
@@ -403,6 +407,7 @@ public class Unf5Digest implements UnfCons {
      */
     public static <T extends CharSequence> String unfV(final T[] obj, int cdg) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException {
         int hsz = 128;
         signature = new Unf5Class(cdg, DEF_NDGTS, hsz);
@@ -423,6 +428,7 @@ public class Unf5Digest implements UnfCons {
     public static <T extends CharSequence> String unfV(final T[] obj, int cdg,
             Unf5Class signature) throws
             UnsupportedEncodingException,
+            UnfException,
             IOException{
         UnfString<T> unfno = new UnfString<T>();
         String init = String.format("%064d", 0);
@@ -486,7 +492,7 @@ public class Unf5Digest implements UnfCons {
      * @throws IOException
      */
     public static String addUNFs(String[] b64) throws
-            UnsupportedEncodingException, IOException
+            UnsupportedEncodingException, UnfException, IOException
             {
         if (b64.length <= 0) {
             return null;
