@@ -48,7 +48,7 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UNF5Util {
+public class UNFUtil {
 
     /**
      * Obtains the unf of a one dimensional array of double
@@ -66,8 +66,8 @@ public class UNF5Util {
         for (int n = 0; n < numb.length; ++n) {
             mat[0][n] = numb[n];
         }
-        Unf5Digest.setTrnps(false);
-        String[] res = Unf5Digest.unf(mat);
+        UnfDigest.setTrnps(false);
+        String[] res = UnfDigest.unf(mat);
 
         return res[0];
     }
@@ -192,7 +192,7 @@ public class UNF5Util {
         for (int k = 0; k < numb.length; ++k) {
             toret[k] = Boolean.valueOf(numb[k]);
         }
-        String[] res = Unf5Digest.unf(toret);
+        String[] res = UnfDigest.unf(toret);
         return res[0];
     }
 
@@ -233,20 +233,20 @@ public class UNF5Util {
         if (chr[0] != null) {
             String spres[] = chr[0].split(tosplit);
             if (spres.length >= 3 && chr[0].startsWith("UNF:")) {
-                return Unf5Digest.addUNFs(chr);
+                return UnfDigest.addUNFs(chr);
             }
             if (spres.length > 1) {
                 //throw new UnfException("UNFUtil: Malformed unf");
             }
         }
         CharSequence[][] chseq = new CharSequence[1][chr.length];
-        Unf5Digest.setTrnps(false);
+        UnfDigest.setTrnps(false);
         int cnt = 0;
         for (String str : chr) {
             chseq[0][cnt] = (CharSequence) str;
             cnt++;
         }
-        String[] res = Unf5Digest.unf(chseq);
+        String[] res = UnfDigest.unf(chseq);
         return res[0];
     }
 
@@ -256,7 +256,7 @@ public class UNF5Util {
          if (chr[0] != null) {
              String spres[] = chr[0].split(tosplit);
              if (spres.length >= 3 && chr[0].startsWith("UNF:")) {
-                 return Unf5Digest.addUNFs(chr);
+                 return UnfDigest.addUNFs(chr);
              }
 
              if (spres.length > 1) {
@@ -264,7 +264,7 @@ public class UNF5Util {
              }
          }
         CharSequence[][] chseq = new CharSequence[1][chr.length];
-        Unf5Digest.setTrnps(false);
+        UnfDigest.setTrnps(false);
         int cnt = 0;
         for (String str : chr) {
             if (sdfFormat[cnt] != null) {
@@ -288,13 +288,13 @@ public class UNF5Util {
                         }
                     }
                 } catch (ParseException ex) {
-                    Logger.getLogger(UNF5Util.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UNFUtil.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             chseq[0][cnt] = (CharSequence) str;
             cnt++;
         }
-        String[] res = Unf5Digest.unf(chseq);
+        String[] res = UnfDigest.unf(chseq);
         return res[0];
     }
 
@@ -304,7 +304,7 @@ public class UNF5Util {
          if (beginDate[0] != null) {
              String spres[] = beginDate[0].split(tosplit);
              if (spres.length >= 3 && beginDate[0].startsWith("UNF:")) {
-                 return Unf5Digest.addUNFs(beginDate);
+                 return UnfDigest.addUNFs(beginDate);
              }
 
              if (spres.length > 1) {
@@ -312,7 +312,7 @@ public class UNF5Util {
              }
          }
         CharSequence[][] chseq = new CharSequence[1][beginDate.length];
-        Unf5Digest.setTrnps(false);
+        UnfDigest.setTrnps(false);
         int cnt = 0;
         for (String str : beginDate) {
             if (sdfFormat[cnt] != null) {
@@ -351,13 +351,13 @@ public class UNF5Util {
                         str += "/" + str2;
                     }
                 } catch (ParseException ex) {
-                    Logger.getLogger(UNF5Util.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UNFUtil.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             chseq[0][cnt] = (CharSequence) str;
             cnt++;
         }
-        String[] res = Unf5Digest.unf(chseq);
+        String[] res = UnfDigest.unf(chseq);
         return res[0];
     }
 
@@ -385,7 +385,7 @@ public class UNF5Util {
                 pass[r][c] = numb[r][c];
             }
         }
-        String[] unfs = Unf5Digest.unf(pass);
+        String[] unfs = UnfDigest.unf(pass);
         return calculateUNF(unfs);
     }
 
@@ -413,7 +413,7 @@ public class UNF5Util {
                 pass[r][c] = str[r][c];
             }
         }
-        String[] unfs = Unf5Digest.unf(pass);
+        String[] unfs = UnfDigest.unf(pass);
         return calculateUNF(unfs);
     }
 
@@ -422,15 +422,15 @@ public class UNF5Util {
         for (int n = 0; n < numb.length; ++n) {
             mat[0][n] = numb[n] != null ? Double.valueOf(numb[n].doubleValue()) : null;
         }
-        Unf5Digest.setTrnps(false);
-        String[] res = Unf5Digest.unf(mat);
+        UnfDigest.setTrnps(false);
+        String[] res = UnfDigest.unf(mat);
 
         return res[0];
     }
 
     public static String calculateUNF(final BitString[] numb) throws IOException {
-        Unf5Digest.setTrnps(false);
-        String[] res = Unf5Digest.unf(numb);
+        UnfDigest.setTrnps(false);
+        String[] res = UnfDigest.unf(numb);
 
         return res[0];
     }

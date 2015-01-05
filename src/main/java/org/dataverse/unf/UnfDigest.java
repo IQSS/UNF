@@ -52,24 +52,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Unf5Digest implements UnfCons {
+public class UnfDigest implements UnfCons {
 
-    private static Logger mLog = Logger.getLogger(Unf5Digest.class.getName());
-    /**last version of unf supported*/
-    /** current version */
-   //private static float currentVersion = 3f;
-    private static String currentVersion = "5";
-    /** the MessageDigest algor associated with lastVersion*/
+    private static Logger mLog = Logger.getLogger(UnfDigest.class.getName());
+    private static String currentVersion = "6";
     private static final String SHA256 = "SHA-256";
-    /** encoder to use for version 4.1*/
     private static final String UTF8 = "UTF-8";
-    /** transpose the array of data so unf is applied along each column*/
     private static boolean trnps = transpose;
     /** List elements are arrays of fingerprints
      * for every column of input data obj*/
     private static List<List<Integer>> fingerprint = new ArrayList<List<Integer>>();
 
-    private static String getExtensions(Unf5Class signature) {
+    private static String getExtensions(UnfClass signature) {
         StringBuffer retValBuf = new StringBuffer();
         if (signature != null){
             String extensions = signature.getExtensions();
@@ -84,14 +78,14 @@ public class Unf5Digest implements UnfCons {
     /** Unf5Class type after calculating digest
      * and Base64 encoding of all columns in data matrix.
      *  Contains fingerprints, hexadecimal strings, digest and the parameters to obtain them*/
-    private static Unf5Class signature = null;
+    private static UnfClass signature = null;
     /**whether to create object of type Unf5Class */
     private static boolean buildunfObj = new Boolean(unfObj);
 
     /**
      * Constructor
      */
-    public Unf5Digest() {
+    public UnfDigest() {
         if (!DEBUG || !debug) {
             mLog.setLevel(Level.WARNING);
         }
@@ -143,7 +137,7 @@ public class Unf5Digest implements UnfCons {
      *
      * @return Unf5Class summarizing the digest encoding of data set
      */
-    public static Unf5Class getSignature() {
+    public static UnfClass getSignature() {
         return signature;
     }
 
@@ -151,7 +145,7 @@ public class Unf5Digest implements UnfCons {
      *
      * @param c Unf5Class setting digest encoding of data set
      */
-    public void setSignature(Unf5Class c) {
+    public void setSignature(UnfClass c) {
         signature = c;
     }
 
@@ -234,7 +228,7 @@ public class Unf5Digest implements UnfCons {
         String enc = UTF8;
         int hsz = 128; // TODO default for dvn only
         if (buildunfObj) {
-            signature = new Unf5Class(cdigits, ndigits, hsz);
+            signature = new UnfClass(cdigits, ndigits, hsz);
         }
 
         String[] res = new String[nrow];
@@ -248,7 +242,7 @@ public class Unf5Digest implements UnfCons {
         int nrow = 1;
         int hsz = 128; // TODO default for dvn only
         if (buildunfObj) {
-            signature = new Unf5Class(DEF_CDGTS, DEF_NDGTS, DEF_HSZ);
+            signature = new UnfClass(DEF_CDGTS, DEF_NDGTS, DEF_HSZ);
         }
         String[] res = new String[nrow];
  
@@ -260,7 +254,7 @@ public class Unf5Digest implements UnfCons {
         int nrow = b.length;
         int hsz = 128; // TODO default for dvn only
         if (buildunfObj) {
-            signature = new Unf5Class(DEF_CDGTS, DEF_NDGTS, hsz);
+            signature = new UnfClass(DEF_CDGTS, DEF_NDGTS, hsz);
         }
         String[] res = new String[nrow];
 
@@ -330,7 +324,7 @@ public class Unf5Digest implements UnfCons {
         }
         int hsz = 128; // TODO default for dvn only
         if (buildunfObj) {
-            signature = new Unf5Class(cdigits, ndigits, hsz);
+            signature = new UnfClass(cdigits, ndigits, hsz);
         }
         String[] res = new String[nrow];
         for (int r = 0; r < nrow; r++) {
@@ -354,7 +348,7 @@ public class Unf5Digest implements UnfCons {
             UnfException,
             IOException {
         int hsz = 128;
-        signature = new Unf5Class(DEF_CDGTS, ndg, hsz);
+        signature = new UnfClass(DEF_CDGTS, ndg, hsz);
         return unfV(obj, ndg, signature);
     }
 
@@ -370,7 +364,7 @@ public class Unf5Digest implements UnfCons {
      * @throws IOException
      */
     public static <T extends Number> String unfV(final T[] obj,
-            int ndg, Unf5Class signature) throws
+            int ndg, UnfClass signature) throws
             UnsupportedEncodingException,
             UnfException,
             IOException {
@@ -385,7 +379,7 @@ public class Unf5Digest implements UnfCons {
             buildclass = true;
         } else{
             int hsz = 128;
-            signature = new Unf5Class(DEF_CDGTS, ndg, hsz);
+            signature = new UnfClass(DEF_CDGTS, ndg, hsz);
         }
 
         b64 = "UNF:" + getVersion() + getExtensions(signature) + ":" + b64;
@@ -410,7 +404,7 @@ public class Unf5Digest implements UnfCons {
             UnfException,
             IOException {
         int hsz = 128;
-        signature = new Unf5Class(cdg, DEF_NDGTS, hsz);
+        signature = new UnfClass(cdg, DEF_NDGTS, hsz);
         return unfV(obj, cdg, signature);
     }
 
@@ -426,7 +420,7 @@ public class Unf5Digest implements UnfCons {
      * @throws IOException
      */
     public static <T extends CharSequence> String unfV(final T[] obj, int cdg,
-            Unf5Class signature) throws
+            UnfClass signature) throws
             UnsupportedEncodingException,
             UnfException,
             IOException{
@@ -446,7 +440,7 @@ public class Unf5Digest implements UnfCons {
             buildclass = true;
         } else{
             int hsz = 128;
-            signature = new Unf5Class(cdg,DEF_NDGTS,hsz);
+            signature = new UnfClass(cdg,DEF_NDGTS,hsz);
         }
         b64 = "UNF:" + getVersion() + getExtensions(signature) + ":" + b64;
         if (buildunfObj && buildclass) {
@@ -466,7 +460,7 @@ public class Unf5Digest implements UnfCons {
      * @param signature Unf5Class to store results of applying unf to a data set
      */
     private static void buildUnf5Class(List<Integer> fingerp,
-            StringBuilder hex, String b64, Unf5Class signature) {
+            StringBuilder hex, String b64, UnfClass signature) {
         int sz = fingerp.size();
         fingerprint.add(fingerp);
         Integer[] toadd = fingerp.toArray(new Integer[sz]);
@@ -523,7 +517,7 @@ public class Unf5Digest implements UnfCons {
         String fin = unfV(sortedb64, DEF_CDGTS, null);
         return fin;
     }
-    public static String unfV(final Boolean[] obj, Unf5Class signature) throws
+    public static String unfV(final Boolean[] obj, UnfClass signature) throws
             UnsupportedEncodingException,
             IOException {
         UnfBoolean unfno = new UnfBoolean();
@@ -537,7 +531,7 @@ public class Unf5Digest implements UnfCons {
         if (signature != null){
             buildclass = true;
         } else{
-            signature = new Unf5Class(DEF_CDGTS, DEF_NDGTS, DEF_HSZ);
+            signature = new UnfClass(DEF_CDGTS, DEF_NDGTS, DEF_HSZ);
         }
 
         b64 = "UNF:" + getVersion() + getExtensions(signature) + ":" + b64;
@@ -549,7 +543,7 @@ public class Unf5Digest implements UnfCons {
     }
 
     public static String unfV(final BitString[] obj,
-            Unf5Class signature) throws
+            UnfClass signature) throws
             UnsupportedEncodingException, IOException{
         int nrows = obj.length;
         UnfBitfield unfno = new UnfBitfield();
@@ -573,7 +567,7 @@ public class Unf5Digest implements UnfCons {
             buildclass = true;
         } else{
             int hsz = 128;
-            signature = new Unf5Class(DEF_CDGTS,DEF_NDGTS,hsz);
+            signature = new UnfClass(DEF_CDGTS,DEF_NDGTS,hsz);
         }
         b64 = "UNF:" + getVersion() + getExtensions(signature) + ":" + b64;
         if (buildunfObj && buildclass) {

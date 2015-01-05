@@ -36,7 +36,7 @@ package org.dataverse.unf;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Unf5Class {
+public class UnfClass {
 
     /** approximate with cdigits number of characters */
     private int cdigits = UnfCons.DEF_CDGTS;
@@ -65,7 +65,7 @@ public class Unf5Class {
     /**
      * Constructor
      */
-    public Unf5Class() {
+    public UnfClass() {
     }
 
     /**
@@ -74,7 +74,7 @@ public class Unf5Class {
      * @param nd integer with number decimal digits
      * @param vers String the unf version
      */
-    public Unf5Class(int cd, int nd) {
+    public UnfClass(int cd, int nd) {
         cdigits = cd;
         ndigits = nd;
         if (cd != UnfCons.DEF_CDGTS) {
@@ -85,7 +85,7 @@ public class Unf5Class {
         }
     }
 
-    public Unf5Class(int cd, int nd, int hsz) {
+    public UnfClass(int cd, int nd, int hsz) {
         cdigits = cd;
         ndigits = nd;
         hsize = hsz;
