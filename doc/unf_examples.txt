@@ -1,0 +1,94 @@
+All the normalization and calculations are done with the default parameters: 
+7 digits of precision, 128 cutoff limit on character strings and SHA256 hashes
+truncated to 128 bits. 
+
+All the examples below are single value vectors of the type specified. 
+
+The accented characters in the character string examples are in UTF8. 
+
+All the normalized strings below represent the final arrays of bytes 
+that are ready to be fed to a SHA256 calculator. 
+
+ - "high" (>127) and zero bytes are represented by their octal (\xxx) 
+   or hex (<XX>) values; 
+
+ - "\n" represents the standard new line byte character (octal \012, hex <0A>);
+
+ - all other characters represent the corresponding US-ASCII byte values. 
+
+
+Numbers:
+=======
+
+VALUE			NORMALIZATION		SHA256(truncated)
+
+0	  		"+0.e+\n\000"		YUvj33xEHnzirIHQyZaHow==
+1	  		"+1.e+\n\000"		tv3XYCv524AfmlFyVOhuZg==
+-300			"-3.e+2\n\000"		ZTXyg54FoMfRDWZl6oWmFQ==
+3.1415			"+3.1415e+\n\000"	vOSZmXXXpKfQcqZ0Cuu5/w==
+0.00073			"+7.3e-4\n\000"		qhw3qzg3fEK0NNfoVxk4jQ==
+
+values with >7 digits of precision:
+(note that the following 2 values produce the same UNF - because of the 
+"ties to even" rounding mode used!)
+
+1.2345675		"+1.234568e+1\n\000"
+1.2345685		"+1.234568e+1\n\000"
+
+"special" values: 
+
+NaN			"+nan\n\000"		GNcR8/UCnImaPpw47gdPNg==
++Inf			"+inf\n\000"		MdAI70WZdDHnu6qmkpqUQg==		
+-Inf			"-inf\n\000"		A7orv3pgAhljFnGjQVLCog==
+
+Character Strings:
+=================
+
+a "simple" string: 
+-----------------
+
+"A character String"	"A character String\n\000"	FYqU7uBl885eHMbpco1ooA==
+
+a long string:
+-------------
+
+"A quite long character string, so long that the number of characters in it happens to be more than the default cutoff limit of 128."
+normalization:
+"A quite long character string, so long that the number of characters in it happens to be more than the default cutoff limit of 1\n\000"
+SHA256: /BoSlfcIlsmQ+GHu5gxwEw==
+
+a string with accented (western latin) characters:
+-------------------------------------------------
+
+"på Færøerne"
+
+Normalization in UTF-8, actual bytes: 
+
+hex: "p<C3><A5> F<C3><A6>r<C3><B8>erne<0A><00>" 
+octal: "p\303\245 F\303\246r\303\270erne\012\000"
+
+SHA256: KHM6bKVaVaxWDDsmyerfDA==
+
+an empty string: 
+---------------
+
+""	"\n\000"		ECtRuXZaVqPomffPDuOOUg==
+
+Missing value (of all types):
+============================
+
+	"\000\000\000"		cJ6AyISHokEeHuTfufIqhg==
+
+
+Times and Dates: 
+===============
+
+Mon Jan 13 20:47:18 2014	"2014-01-13T20:47:18\n\000"	eaMxex5EHi2LunomVc0SDw==
+
+Mon Jan 13 20:47:18 EST 2014	"2014-01-14T01:47:18Z\n\000"	1Pku/Z/EIRtmpdEepAb1MA==
+
+Booleans: 
+========
+
+TRUE	  "+1.e+\n\000"		tv3XYCv524AfmlFyVOhuZg==
+FALSE	  "+0.e+\n\000"		YUvj33xEHnzirIHQyZaHow==
