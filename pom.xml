@@ -4,24 +4,89 @@
 
     <groupId>org.dataverse</groupId>
     <artifactId>unf</artifactId>
-    <version>6.0</version>
+    <version>6.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>unf</name>
-
-    <properties>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <repositories>
+    <name>Universal Numerical Fingerprint</name>
+    <description>
+        The Universal Numerical Fingerprint (UNF) is a cryptographic signature of the approximated semantic content of
+        a digital object. It is computed on the normalized (or canonicalized) forms of the data values, and is thus
+        independent of the storage medium and format of the data.
+    </description>
+    <url>https://github.com/IQSS/UNF</url>
+    
+    <scm>
+        <connection>scm:git:git@github.com:IQSS/UNF.git</connection>
+        <developerConnection>scm:git:git@github.com:IQSS/UNF.git</developerConnection>
+        <url>git@github.com:IQSS/UNF.git</url>
+        <tag>HEAD</tag>
+    </scm>
+    <ciManagement>
+        <url>https://github.com/IQSS/UNF/actions</url>
+        <system>github</system>
+        <notifiers>
+            <notifier>
+                <address>dataversebot@gdcc.io</address>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>maven-repo</id>  
-            <name>Maven Repository</name>  
-            <url>http://mvnrepository.com/</url>  
-            <layout>default</layout>  
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-    </repositories>
+    </distributionManagement>
+    
+    <developers>
+        <developer>
+            <name>Dataverse Core Team</name>
+            <email>support@dataverse.org</email>
+            <url>https://dataverse.org</url>
+        </developer>
+    </developers>
+    
+    <properties>
+        <jdk.version>17</jdk.version>
+        
+        <!-- Global Maven settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javadoc.lint>none</javadoc.lint>
+        <!-- Needed to avoid IDEA IDE compilation failures. See commits in GH #5059 -->
+        <compilerArgument />
+        <project.timezone>UTC</project.timezone>
+        <project.language>en</project.language>
+        <project.region>US</project.region>
+        <argLine>-Duser.timezone=${project.timezone} -Dfile.encoding=${project.build.sourceEncoding} -Duser.language=${project.language} -Duser.region=${project.region}</argLine>
+        <skipUT>false</skipUT>
+        
+        <!-- Dependency versions -->
+        
+        <!-- Official Maven Plugins -->
+        <maven-plugin-api.version>3.8.2</maven-plugin-api.version>
+        <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <maven-plugin-plugin.version>3.9.0</maven-plugin-plugin.version>
+        <maven-site-plugin.version>4.0.0-M8</maven-site-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-flatten-plugin.version>1.5.0</maven-flatten-plugin.version>
+        <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+        <maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        
+        <pomchecker-maven-plugin.version>1.7.0</pomchecker-maven-plugin.version>
+        <nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
+    </properties>
              
     <dependencies>
         <dependency>
@@ -40,53 +105,231 @@
                 </includes>
             </resource>
         </resources>
+        
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <release>${jdk.version}</release>
+                        <compilerArgument>${compilerArgument}</compilerArgument>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugin-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${maven-flatten-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.kordamp.maven</groupId>
+                    <artifactId>pomchecker-maven-plugin</artifactId>
+                    <version>${pomchecker-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
+            <!-- TESTING -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
+                    <skipTests>${skipUT}</skipTests>
+                </configuration>
+            </plugin>
+            
+            <!-- RELEASING -->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
+                <groupId>org.kordamp.maven</groupId>
+                <artifactId>pomchecker-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>oss</flattenMode>
+                    <pomElements>
+                        <distributionManagement>remove</distributionManagement>
+                        <repositories>remove</repositories>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <!-- enable flattening -->
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- ensure proper cleanup -->
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- META -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <id>enforce-maven</id>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>enforce</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>7.0</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.6.3</version>
+                                </requireMavenVersion>
+                            </rules>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
+    
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <source>${jdk.version}</source>
+                            <detectJavaApiLink>false</detectJavaApiLink>
+                            <doclint>${javadoc.lint}</doclint>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
