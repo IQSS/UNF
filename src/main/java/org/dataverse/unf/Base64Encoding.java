@@ -30,11 +30,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.net.BCodec;
 
 public class Base64Encoding implements UnfCons {
 
@@ -91,7 +89,7 @@ public class Base64Encoding implements UnfCons {
 
 
 
-        tobase64 = Base64.encodeBase64(btstream.array());
+        tobase64 = Base64.getEncoder().encode(btstream.array());
 
         return new String(tobase64);
 
@@ -106,61 +104,27 @@ public class Base64Encoding implements UnfCons {
      */
     public static String tobase64(byte[] digest, String enc)
             throws UnsupportedEncodingException {
-
+        
         ByteArrayOutputStream btstream = new ByteArrayOutputStream();
         //this make sure is written in big-endian
-
+        
         DataOutputStream stream = new DataOutputStream(btstream);
-
+        
         byte[] tobase64 = null;
         byte[] revdigest = new byte[digest.length];
         revdigest = changeByteOrder(digest, ByteOrder.nativeOrder());
         try {
-
+            
             stream.write(revdigest);
             stream.flush();
-
-            tobase64 = Base64.encodeBase64(btstream.toByteArray());
-
+            
+            tobase64 = Base64.getEncoder().encode(btstream.toByteArray());
+            
         } catch (IOException io) {
-            tobase64 = Base64.encodeBase64(digest);
+            tobase64 = Base64.getEncoder().encode(digest);
         }
-
+        
         return new String(tobase64, enc);
-    }
-
-    /**
-     * Alternative tobase64 method.Encodes the String(byte[]) instead of the array
-     *
-     * @param digest byte array for encoding in base 64,
-     * @param cset String with name of charset
-     * @return String base 64 the encoded base64 of digest
-     */
-    public static String tobase641(byte[] digest, String cset) {
-        byte[] revdigest = changeByteOrder(digest, ByteOrder.nativeOrder());
-        String str = null;
-
-        str = new String(revdigest);
-        ByteArrayOutputStream btstream = new ByteArrayOutputStream();
-        //this make sure is written in big-endian
-
-        DataOutputStream stream = new DataOutputStream(btstream);
-        String tobase64 = null;
-        //use a charset for encoding
-        if (cset == null) {
-            cset = DEFAULT_CHAR_ENCODING;
-        }
-        BCodec bc = new BCodec(cset);
-        try {
-
-
-            tobase64 = (String) bc.encode(str);
-
-
-        } catch (EncoderException err) {
-            mLog.info("base64Encoding: exception" + err.getMessage());
-        }
-        return tobase64;
     }
 
     /**
