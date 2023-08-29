@@ -1,43 +1,19 @@
-/*
- * Dataverse Network - A web application to distribute, share and
- * analyze quantitative data.
- * Copyright (C) 2008
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation; either version 3 of the License,
- * or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- *  along with this program; if not, see http://www.gnu.org/licenses
- * or write to the Free Software Foundation,Inc., 51 Franklin Street,
- * Fifth Floor, Boston, MA 02110-1301 USA
- */
+// Copyright 2023 Dataverse Core Team <support@dataverse.org>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: Apache-2.0
 
-/**
- * @author evillalon
- * After Micah Altman code written in C
- * 
- * Description: Calculate MessageDigest for a vector with any of the 
- *              sub-classes that extend CharSequence. The algorithm can 
- *              apply any of the MessageDigest algorithms available in java.
- *              The class of the input data is of type String or any related classes.
- *              It can either calculate a different encoding for text
- *              from the original encoding in UnfCons.textencoding
- *              It also obtains the Base64 string representation of the 
- *              bytes that are returned with the digest
- *              
- * **For unf version 3 encoding is UTF-32BE and digest is MD5
- * **for version 4 encoding is UTF-32BE and digest is SHA-256
- * **for version 4.1 encoding is UTF-8 and digest is SHA-256
- * ** default encoding to read the bytes is in UnfCons, UTF-8
- *              
- */
 package org.dataverse.unf;
 
 import java.io.UnsupportedEncodingException;
