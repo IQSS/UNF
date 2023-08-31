@@ -1,23 +1,18 @@
-/*
- * Dataverse Network - A web application to distribute, share and
- * analyze quantitative data.
- * Copyright (C) 2008
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation; either version 3 of the License,
- * or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- *  along with this program; if not, see http://www.gnu.org/licenses
- * or write to the Free Software Foundation,Inc., 51 Franklin Street,
- * Fifth Floor, Boston, MA 02110-1301 USA
- */
+// Copyright 2023 Dataverse Core Team <support@dataverse.org>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: Apache-2.0
 
 /**
  * Description: Base64 encoding algorithm. The base64(byte[] input) takes into account
@@ -35,11 +30,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.net.BCodec;
 
 public class Base64Encoding implements UnfCons {
 
@@ -96,7 +89,7 @@ public class Base64Encoding implements UnfCons {
 
 
 
-        tobase64 = Base64.encodeBase64(btstream.array());
+        tobase64 = Base64.getEncoder().encode(btstream.array());
 
         return new String(tobase64);
 
@@ -111,61 +104,27 @@ public class Base64Encoding implements UnfCons {
      */
     public static String tobase64(byte[] digest, String enc)
             throws UnsupportedEncodingException {
-
+        
         ByteArrayOutputStream btstream = new ByteArrayOutputStream();
         //this make sure is written in big-endian
-
+        
         DataOutputStream stream = new DataOutputStream(btstream);
-
+        
         byte[] tobase64 = null;
         byte[] revdigest = new byte[digest.length];
         revdigest = changeByteOrder(digest, ByteOrder.nativeOrder());
         try {
-
+            
             stream.write(revdigest);
             stream.flush();
-
-            tobase64 = Base64.encodeBase64(btstream.toByteArray());
-
+            
+            tobase64 = Base64.getEncoder().encode(btstream.toByteArray());
+            
         } catch (IOException io) {
-            tobase64 = Base64.encodeBase64(digest);
+            tobase64 = Base64.getEncoder().encode(digest);
         }
-
+        
         return new String(tobase64, enc);
-    }
-
-    /**
-     * Alternative tobase64 method.Encodes the String(byte[]) instead of the array
-     *
-     * @param digest byte array for encoding in base 64,
-     * @param cset String with name of charset
-     * @return String base 64 the encoded base64 of digest
-     */
-    public static String tobase641(byte[] digest, String cset) {
-        byte[] revdigest = changeByteOrder(digest, ByteOrder.nativeOrder());
-        String str = null;
-
-        str = new String(revdigest);
-        ByteArrayOutputStream btstream = new ByteArrayOutputStream();
-        //this make sure is written in big-endian
-
-        DataOutputStream stream = new DataOutputStream(btstream);
-        String tobase64 = null;
-        //use a charset for encoding
-        if (cset == null) {
-            cset = DEFAULT_CHAR_ENCODING;
-        }
-        BCodec bc = new BCodec(cset);
-        try {
-
-
-            tobase64 = (String) bc.encode(str);
-
-
-        } catch (EncoderException err) {
-            mLog.info("base64Encoding: exception" + err.getMessage());
-        }
-        return tobase64;
     }
 
     /**
