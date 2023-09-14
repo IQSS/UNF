@@ -3,6 +3,13 @@ on:
     push:
         branches:
             - master
+
+env:
+    # Some forks are using older Java versions, so we need to maintain backward compatibility
+    # or people's builds break, as the Maven Central version takes priority over local_lib
+    # (not present anymore as of DV 6.0, but relevant for prior versions!). Result: hard code to Java 8.
+    TARGET_JAVA_VERSION: 8
+
 jobs:
     publish:
         runs-on: ubuntu-latest
@@ -27,10 +34,10 @@ jobs:
                   key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
                   restore-keys: ${{ runner.os }}-m2
             - name: Build, test, verify and publish snapshot
-              run: mvn -B verify -Djdk.version=${{ matrix.java }}
+              run: mvn -B verify -Djdk.version=${{ env.TARGET_JAVA_VERSION }}
             - name: Publish snapshot
               if: ${{ matrix.java == '17' }}
-              run: mvn deploy -DskipUT -DskipIT
+              run: mvn deploy -DskipUT -DskipIT -Djdk.version=${{ env.TARGET_JAVA_VERSION }}
               env:
                   MAVEN_USERNAME: ${{ secrets.DATAVERSEBOT_SONATYPE_USERNAME }}
                   MAVEN_PASSWORD: ${{ secrets.DATAVERSEBOT_SONATYPE_TOKEN }}
