@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - master
+            - debug-ci
 
 env:
     # Some forks are using older Java versions, so we need to maintain backward compatibility
@@ -37,7 +38,7 @@ jobs:
               run: mvn -B verify -Djdk.version=${{ env.TARGET_JAVA_VERSION }}
             - name: Publish snapshot
               if: ${{ matrix.java == '17' }}
-              run: mvn deploy -DskipUT -DskipIT -Djdk.version=${{ env.TARGET_JAVA_VERSION }}
+              run: mvn -e -X deploy -DskipUT -DskipIT -Djdk.version=${{ env.TARGET_JAVA_VERSION }}
               env:
                   MAVEN_USERNAME: ${{ secrets.DATAVERSEBOT_SONATYPE_USERNAME }}
                   MAVEN_PASSWORD: ${{ secrets.DATAVERSEBOT_SONATYPE_TOKEN }}
