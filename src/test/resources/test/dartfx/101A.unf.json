@@ -1,0 +1,54 @@
+{
+  "unf_version": "6",
+  "metadata": {
+    "timestamp": "2026-03-09T22:08:04.297397Z",
+    "parameters": {
+      "N": 7,
+      "X": 128,
+      "H": 128,
+      "rounding_mode": "IEEE_754_nearest_even"
+    },
+    "software": {
+      "name": "dataverse-unf-java",
+      "version": "6.0.2-SNAPSHOT"
+    },
+    "options": {
+      "output": "src/test/resources/test/dartfx/101A.unf.json",
+      "type": "string",
+      "has_header": true,
+      "column_types": null
+    }
+  },
+  "result": {
+    "type": "file",
+    "label": "101A.csv",
+    "unf": "UNF:6:kBkE4q7GbowX/3tKvDSEWg==",
+    "columns": [
+      {
+        "name": "id",
+        "type": "numeric",
+        "unf": "UNF:6:AvELPR5QTaBbnq6S22Msow=="
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "unf": "UNF:6:G3RHxSQPXELRGHIJ+FV6qA=="
+      },
+      {
+        "name": "sex",
+        "type": "string",
+        "unf": "UNF:6:VSDSXcRD7ShBmQqv1WR9EA=="
+      },
+      {
+        "name": "dob",
+        "type": "string",
+        "unf": "UNF:6:PH+jFA4u+yJSs1sIw64dyw=="
+      },
+      {
+        "name": "income",
+        "type": "numeric",
+        "unf": "UNF:6:v/5E9kHI79TVvlGYinvxTQ=="
+      }
+    ]
+  }
+}

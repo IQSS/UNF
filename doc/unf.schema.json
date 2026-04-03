@@ -1,0 +1,157 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "UNF v6 Report Schema",
+    "description": "Schema for Universal Number Fingerprint (UNF) v6 calculation results, supporting Column, File, and Dataset levels.",
+    "type": "object",
+    "required": [
+        "unf_version",
+        "metadata",
+        "result"
+    ],
+    "properties": {
+        "unf_version": {
+            "type": "string",
+            "enum": [
+                "6"
+            ],
+            "description": "The UNF specification version used."
+        },
+        "metadata": {
+            "type": "object",
+            "required": [
+                "parameters"
+            ],
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "N": {
+                            "type": "integer",
+                            "default": 7,
+                            "description": "Significant digits for numeric values."
+                        },
+                        "X": {
+                            "type": "integer",
+                            "default": 128,
+                            "description": "Character string truncation length."
+                        },
+                        "H": {
+                            "type": "integer",
+                            "enum": [
+                                128,
+                                192,
+                                196,
+                                256
+                            ],
+                            "default": 128,
+                            "description": "Hash bits for truncation."
+                        },
+                        "rounding_mode": {
+                            "type": "string",
+                            "enum": [
+                                "IEEE_754_nearest_even",
+                                "R1_truncate"
+                            ]
+                        }
+                    }
+                },
+                "software": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "result": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/dataset_level"
+                },
+                {
+                    "$ref": "#/definitions/file_level"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "column_level": {
+            "type": "object",
+            "required": [
+                "name",
+                "unf"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "unf": {
+                    "type": "string",
+                    "pattern": "^UNF:6:.*$"
+                }
+            }
+        },
+        "file_level": {
+            "type": "object",
+            "required": [
+                "type",
+                "unf",
+                "columns"
+            ],
+            "properties": {
+                "type": {
+                    "const": "file"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "unf": {
+                    "type": "string"
+                },
+                "columns": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/column_level"
+                    }
+                }
+            }
+        },
+        "dataset_level": {
+            "type": "object",
+            "required": [
+                "type",
+                "unf",
+                "entries"
+            ],
+            "properties": {
+                "type": {
+                    "const": "dataset"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "unf": {
+                    "type": "string"
+                },
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/file_level"
+                    }
+                }
+            }
+        }
+    }
+}

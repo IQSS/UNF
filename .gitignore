@@ -12,3 +12,17 @@
 hs_err_pid*
 .flattened-pom.xml
 target/
+
+# OS and editor artifacts
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Local IDE/editor settings
+.vscode/
+.idea/
+*.iml
